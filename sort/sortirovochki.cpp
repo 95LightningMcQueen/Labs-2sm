@@ -1,31 +1,65 @@
 #include <iostream>
 #include <algorithm>  // Для std::swap
-
+#include <cstdlib>    // Для std::rand, std::srand
+#include <ctime>      // Для std::time
 
 // ---------------------------------------------------------------------
-// Функция для вывода массива на экран
+// Функция fillArray
+// Идея: Заполнение массива путём предоставления пользователю выбора метода:
+//       1 - Ручной ввод,
+//       2 - Автоматическое заполнение случайными числами (диапазон 0-99).
 // ---------------------------------------------------------------------
-void printArray(int arr[], int n) 
+void fillArray(int arr[], int n)
 {
-    for (int i = 0; i < n; i++) 
+    int method;
+    std::cout << "Choose input method:\n";
+    std::cout << "1: Manual Input\n";
+    std::cout << "2: Random Input\n";
+    std::cout << "Enter your choice (1 or 2): ";
+    std::cin >> method;
+
+    if (method == 1)
     {
-        std::cout << arr[i] << " ";
+        std::cout << "Enter " << n << " elements:\n";
+        for (int i = 0; i < n; i++)
+        {
+            std::cout << "Element " << i + 1 << ": ";
+            std::cin >> arr[i];
+        }
     }
-    std::cout << '\n';
+    else if (method == 2)
+    {
+        std::srand((unsigned)std::time(0));
+        for (int i = 0; i < n; i++)
+        {
+            arr[i] = std::rand() % 100;  // random number from 0 to 99
+        }
+        std::cout << "Array filled with random numbers.\n";
+    }
+    else
+    {
+        std::cout << "Invalid choice, using random fill instead.\n";
+        std::srand((unsigned)std::time(0));
+        for (int i = 0; i < n; i++)
+        {
+            arr[i] = std::rand() % 100;
+        }
+        std::cout << "Array filled with random numbers.\n";
+    }
 }
 
 // ---------------------------------------------------------------------
 // 1. Сортировка вставками (Insertion Sort)
-// Идея: Проходим по массиву, берём текущий элемент (key) и вставляем его
-// в отсортированную часть, сдвигая вправо элементы, большие key.
+// Идея: Проходим по массиву, берём текущий элемент (key) и вставляем его в
+// отсортированную часть, сдвигая вправо элементы, большие key.
 // ---------------------------------------------------------------------
-void insertionSort(int arr[], int n) 
+void insertionSort(int arr[], int n)
 {
-    for (int i = 1; i < n; i++) 
+    for (int i = 1; i < n; i++)
     {
         int key = arr[i];
         int j = i - 1;
-        while (j >= 0 && arr[j] > key) 
+        while (j >= 0 && arr[j] > key)
         {
             arr[j + 1] = arr[j];
             j--;
@@ -39,7 +73,7 @@ void insertionSort(int arr[], int n)
 // Идея: Разбиваем массив на две части, рекурсивно сортируем их, 
 // а затем объединяем две отсортированные части.
 // ---------------------------------------------------------------------
-void merge(int arr[], int left, int mid, int right) 
+void merge(int arr[], int left, int mid, int right)
 {
     int n1 = mid - left + 1;  // Размер левого подмассива
     int n2 = right - mid;     // Размер правого подмассива
@@ -48,29 +82,29 @@ void merge(int arr[], int left, int mid, int right)
     int* R = new int[n2];
 
     // Копируем элементы в временные массивы
-    for (int i = 0; i < n1; i++) 
+    for (int i = 0; i < n1; i++)
     {
         L[i] = arr[left + i];
     }
-    for (int j = 0; j < n2; j++) 
+    for (int j = 0; j < n2; j++)
     {
         R[j] = arr[mid + 1 + j];
     }
 
     int i = 0, j = 0, k = left;
     // Объединяем временные массивы в основной
-    while (i < n1 && j < n2) 
+    while (i < n1 && j < n2)
     {
         if (L[i] <= R[j])
             arr[k++] = L[i++];
         else
             arr[k++] = R[j++];
     }
-    while (i < n1) 
+    while (i < n1)
     {
         arr[k++] = L[i++];
     }
-    while (j < n2) 
+    while (j < n2)
     {
         arr[k++] = R[j++];
     }
@@ -78,9 +112,9 @@ void merge(int arr[], int left, int mid, int right)
     delete[] R;
 }
 
-void mergeSort(int arr[], int left, int right) 
+void mergeSort(int arr[], int left, int right)
 {
-    if (left < right) 
+    if (left < right)
     {
         int mid = left + (right - left) / 2;
         mergeSort(arr, left, mid);
@@ -95,13 +129,13 @@ void mergeSort(int arr[], int left, int right)
 // перемещаются влево, а большие – вправо. После чего рекурсивно сортируются
 // полученные части.
 // ---------------------------------------------------------------------
-int partition(int arr[], int low, int high) 
+int partition(int arr[], int low, int high)
 {
     int pivot = arr[high];  // Опорный элемент
     int i = low - 1;        // Индекс для элементов меньше pivot
-    for (int j = low; j < high; j++) 
+    for (int j = low; j < high; j++)
     {
-        if (arr[j] < pivot) 
+        if (arr[j] < pivot)
         {
             i++;
             std::swap(arr[i], arr[j]);
@@ -111,9 +145,9 @@ int partition(int arr[], int low, int high)
     return i + 1;
 }
 
-void quickSort(int arr[], int low, int high) 
+void quickSort(int arr[], int low, int high)
 {
-    if (low < high) 
+    if (low < high)
     {
         int pi = partition(arr, low, high);
         quickSort(arr, low, pi - 1);
@@ -126,7 +160,7 @@ void quickSort(int arr[], int low, int high)
 // Идея: Построить max-кучу из массива, затем последовательно извлекать
 // наибольший элемент (корень) и восстанавливать кучу.
 // ---------------------------------------------------------------------
-void heapify(int arr[], int n, int i) 
+void heapify(int arr[], int n, int i)
 {
     int largest = i;
     int left = 2 * i + 1;
@@ -135,22 +169,22 @@ void heapify(int arr[], int n, int i)
         largest = left;
     if (right < n && arr[right] > arr[largest])
         largest = right;
-    if (largest != i) 
+    if (largest != i)
     {
         std::swap(arr[i], arr[largest]);
         heapify(arr, n, largest);
     }
 }
 
-void heapSort(int arr[], int n) 
+void heapSort(int arr[], int n)
 {
     // Построение кучи
-    for (int i = n / 2 - 1; i >= 0; i--) 
+    for (int i = n / 2 - 1; i >= 0; i--)
     {
         heapify(arr, n, i);
     }
     // Извлечение элементов из кучи
-    for (int i = n - 1; i > 0; i--) 
+    for (int i = n - 1; i > 0; i--)
     {
         std::swap(arr[0], arr[i]);
         heapify(arr, i, 0);
@@ -163,13 +197,13 @@ void heapSort(int arr[], int n)
 // меняем их местами, если они в неверном порядке. Проход повторяется до
 // полной сортировки.
 // ---------------------------------------------------------------------
-void bubbleSort(int arr[], int n) 
+void bubbleSort(int arr[], int n)
 {
-    for (int i = 0; i < n - 1; i++) 
+    for (int i = 0; i < n - 1; i++)
     {
-        for (int j = 0; j < n - i - 1; j++) 
+        for (int j = 0; j < n - i - 1; j++)
         {
-            if (arr[j] > arr[j + 1]) 
+            if (arr[j] > arr[j + 1])
             {
                 std::swap(arr[j], arr[j + 1]);
             }
@@ -182,10 +216,10 @@ void bubbleSort(int arr[], int n)
 // Идея: Подсчитываем вхождения каждого числа (при условии, что все числа неотрицательны),
 // затем восстанавливаем отсортированную последовательность по накопленным счетчикам.
 // ---------------------------------------------------------------------
-int* countingSort(int arr[], int n) 
+int* countingSort(int arr[], int n)
 {
     int max_val = arr[0];
-    for (int i = 1; i < n; i++) 
+    for (int i = 1; i < n; i++)
     {
         if (arr[i] > max_val)
             max_val = arr[i];
@@ -199,13 +233,13 @@ int* countingSort(int arr[], int n)
     for (int i = 1; i < range; i++)
         count[i] += count[i - 1];
     int* output = new int[n];
-    for (int i = n - 1; i >= 0; i--) 
+    for (int i = n - 1; i >= 0; i--)
     {
         output[count[arr[i]] - 1] = arr[i];
         count[arr[i]]--;
     }
     delete[] count;
-    return output; 
+    return output;  // Не забудьте освободить выделенную память в main!
 }
 
 // ---------------------------------------------------------------------
@@ -213,16 +247,16 @@ int* countingSort(int arr[], int n)
 // Идея: Улучшенная сортировка вставками, которая сравнивает элементы,
 // отстоящие на определённое расстояние (gap). Этот шаг постепенно уменьшается до 1.
 // ---------------------------------------------------------------------
-void shellSort(int arr[], int n) 
+void shellSort(int arr[], int n)
 {
     int gap = n / 2;
-    while (gap > 0) 
+    while (gap > 0)
     {
-        for (int i = gap; i < n; i++) 
+        for (int i = gap; i < n; i++)
         {
             int temp = arr[i];
             int j = i;
-            while (j >= gap && arr[j - gap] > temp) 
+            while (j >= gap && arr[j - gap] > temp)
             {
                 arr[j] = arr[j - gap];
                 j -= gap;
@@ -235,15 +269,15 @@ void shellSort(int arr[], int n)
 
 // ---------------------------------------------------------------------
 // 8. Сортировка выбором (Selection Sort)
-// Идея: На каждом шаге находим минимальный элемент из неотсортированной
-// части массива и меняем его местами с первым элементом этой части.
+// Идея: Для каждой позиции в массиве находим минимальный элемент в неотсортированной
+// части и меняем его с первым элементом этой части.
 // ---------------------------------------------------------------------
-void selectionSort(int arr[], int n) 
+void selectionSort(int arr[], int n)
 {
-    for (int i = 0; i < n - 1; i++) 
+    for (int i = 0; i < n - 1; i++)
     {
         int minIndex = i;
-        for (int j = i + 1; j < n; j++) 
+        for (int j = i + 1; j < n; j++)
         {
             if (arr[j] < arr[minIndex])
                 minIndex = j;
@@ -252,18 +286,23 @@ void selectionSort(int arr[], int n)
     }
 }
 
-// ---------------------------------------------------------------------
-// Функция main: Демонстрирует работу всех сортировок. Для каждой сортировки
-// создаются копии исходного массива.
-// ---------------------------------------------------------------------
-int main() {
+// =====================================================================
+// Main function (comments in English)
+// =====================================================================
+int main()
+{
     int n = 10;
-    int original[10] = { 29, 10, 14, 37, 13, 2, 55, 1, 9, 5 };
+    int original[10];  // Array will be filled via the fillArray function
+
+    // Fill the original array using the user's chosen method
+    fillArray(original, n);
 
     int arrInsertion[10], arrMerge[10], arrQuick[10], arrHeap[10],
         arrBubble[10], arrCounting[10], arrShell[10], arrSelection[10];
 
-    for (int i = 0; i < n; i++) {
+    // Manually copy the original array for each sorting algorithm (without std::copy)
+    for (int i = 0; i < n; i++)
+    {
         arrInsertion[i] = original[i];
         arrMerge[i] = original[i];
         arrQuick[i] = original[i];
@@ -300,7 +339,7 @@ int main() {
     int* sortedCounting = countingSort(arrCounting, n);
     std::cout << "After Counting Sort: ";
     printArray(sortedCounting, n);
-    delete[] sortedCounting;
+    delete[] sortedCounting;  // Free dynamically allocated memory
 
     shellSort(arrShell, n);
     std::cout << "After Shell Sort: ";
