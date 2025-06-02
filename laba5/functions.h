@@ -2,15 +2,17 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstdint>
+#include <exception>
 
 
-void enterMatrixSize(int32_t&);
-bool checkMatrixSize(int32_t);
-int32_t** createMatrix(int32_t);
-void deleteMatrix(int32_t**, int32_t);
-void slectingMethod(int32_t**, int32_t);
-void fillMatrixFromKeyboard(int32_t**, int32_t);
-void fillMatrixRandom(int32_t**, int32_t, int32_t, int32_t);
-void printMatrix(int32_t**, int32_t);
-void firstTask(int32_t**, int32_t);
-int32_t findFirstNonNegativeColumn(int32_t**, int32_t);
+void EnterMatrixSize(int32_t&);
+bool CheckMatrixSize(int32_t);
+int32_t** CreateMatrix(int32_t);
+void DeleteMatrix(int32_t**, int32_t);
+void SelectingMethod(int32_t**, int32_t);
+void FillMatrixFromKeyboard(int32_t**, int32_t);
+void FillMatrixRandom(int32_t**, int32_t, int32_t, int32_t);
+void PrintMatrix(int32_t**, int32_t);
+void FirstTask(int32_t**, int32_t);
+int32_t FindFirstNonNegativeColumn(int32_t**, int32_t);
+void SpiralTraversal(int32_t**, int32_t);
