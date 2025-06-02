@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
-#include <stdexcept>
+#include <exception>
 
 
 void InputArraySize(int32_t&);
