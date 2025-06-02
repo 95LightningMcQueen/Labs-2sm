@@ -2,7 +2,7 @@
 
 void InputArraySize(int32_t&);
 bool CheckSize(int32_t);
-const int32_t MAX_SIZE{ 1000 };
+const int32_t MAX_SIZE{100};
 void InputArray(int32_t*, int32_t);
 void OutputArray(int32_t*, int32_t);
 int32_t FindElement(int32_t*, int32_t, int32_t);
