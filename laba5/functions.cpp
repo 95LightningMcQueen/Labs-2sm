@@ -1,13 +1,13 @@
 #include "functions.h"
 
 
-void enterMatrixSize(int32_t& n)
+void EnterMatrixSize(int32_t& n)
 {
     std::cout << "Enter square matrix size (odd number between 3 and 101): ";
     std::cin >> n;
 }
 
-bool checkMatrixSize(int32_t n)
+bool CheckMatrixSize(int32_t n)
 {
     if (n < 3 || n > 101 || (n % 2) == 0)
     {
@@ -16,7 +16,7 @@ bool checkMatrixSize(int32_t n)
     return false;
 }
 
-int32_t** createMatrix(int32_t n)
+int32_t** CreateMatrix(int32_t n)
 {
     int32_t** matrix = new int32_t * [n];
     for (int32_t i = 0; i < n; ++i)
@@ -26,7 +26,7 @@ int32_t** createMatrix(int32_t n)
     return matrix;
 }
 
-void deleteMatrix(int32_t** matrix, int32_t n)
+void DeleteMatrix(int32_t** matrix, int32_t n)
 {
     for (int32_t i = 0; i < n; ++i)
     {
@@ -35,7 +35,7 @@ void deleteMatrix(int32_t** matrix, int32_t n)
     delete[] matrix;
 }
 
-void slectingMethod(int32_t** matrix, int32_t n)
+void SelectingMethod(int32_t** matrix, int32_t n)
 {
     int32_t choice = 0;
     std::cout << "Select the matrix filling method:\n";
@@ -45,21 +45,21 @@ void slectingMethod(int32_t** matrix, int32_t n)
     std::cin >> choice;
     if (choice == 1)
     {
-        fillMatrixFromKeyboard(matrix, n);
+        FillMatrixFromKeyboard(matrix, n);
     }
     else if (choice == 2)
     {
         int32_t lower = 0, upper = 0;
-        fillMatrixRandom(matrix, n, lower, upper);
+        FillMatrixRandom(matrix, n, lower, upper);
     }
     else
     {
         std::cout << "Invalid filling method selection.\n";
-        deleteMatrix(matrix, n);
+        DeleteMatrix(matrix, n);
     }
 }
 
-void fillMatrixFromKeyboard(int32_t** matrix, int32_t n)
+void FillMatrixFromKeyboard(int32_t** matrix, int32_t n)
 {
     for (int32_t i = 0; i < n; ++i)
     {
@@ -71,7 +71,7 @@ void fillMatrixFromKeyboard(int32_t** matrix, int32_t n)
     }
 }
 
-void fillMatrixRandom(int32_t** matrix, int32_t n, int32_t lower, int32_t upper)
+void FillMatrixRandom(int32_t** matrix, int32_t n, int32_t lower, int32_t upper)
 {
     std::cout << "Enter lower bound: ";
     std::cin >> lower;
@@ -91,11 +91,11 @@ void fillMatrixRandom(int32_t** matrix, int32_t n, int32_t lower, int32_t upper)
     else
     {
         std::cout << "Invalid interval.\n";
-        deleteMatrix(matrix, n);
+        DeleteMatrix(matrix, n);
     }
 }
 
-void printMatrix(int32_t** matrix, int32_t n)
+void PrintMatrix(int32_t** matrix, int32_t n)
 {
     for (int32_t i = 0; i < n; ++i)
     {
@@ -107,9 +107,9 @@ void printMatrix(int32_t** matrix, int32_t n)
     }
 }
 
-void firstTask(int32_t** matrix, int32_t n)
+void FirstTask(int32_t** matrix, int32_t n)
 {
-    int32_t firstColumn = findFirstNonNegativeColumn(matrix, n);
+    int32_t firstColumn = FindFirstNonNegativeColumn(matrix, n);
     if (firstColumn != -1)
     {
         std::cout << "\nNumber of the first column without negative elements: " << (firstColumn + 1) << "\n";
@@ -120,9 +120,9 @@ void firstTask(int32_t** matrix, int32_t n)
     }
 }
 
-int32_t findFirstNonNegativeColumn(int32_t** matrix, int32_t n)
+int32_t FindFirstNonNegativeColumn(int32_t** matrix, int32_t n)
 {
-    int32_t firstNonNegativeColumn = -1; // -1 ��������, ��� ������ ������� ���
+    int32_t firstNonNegativeColumn = -1; // -1 означает, что такого столбца нет
     for (int32_t j = 0; j < n; ++j)
     {
         bool allNonNegative = true;
@@ -141,4 +141,33 @@ int32_t findFirstNonNegativeColumn(int32_t** matrix, int32_t n)
         }
     }
     return firstNonNegativeColumn;
+}
+
+void SpiralTraversal(int32_t** matrix, int32_t n)
+{
+    int32_t center = n / 2;
+    int32_t row = center, col = center;
+    int32_t numberOfElements = n * n;
+    int32_t count = 1;  // центральный элемент
+    std::cout << matrix[row][col] << "  ";
+    //направления: вверх, влево, вниз, вправо
+    int32_t directions[4][2] = { {-1, 0}, {0, -1}, {1, 0}, {0, 1} };
+    int32_t d = 0;
+    int32_t steps = 1;
+    while (count < numberOfElements)
+    {
+        for (int rep = 0; rep < 2 && count < numberOfElements; ++rep)
+        {
+            for (int i = 0; i < steps && count < numberOfElements; ++i)
+            {
+                row += directions[d][0];
+                col += directions[d][1];
+                std::cout << matrix[row][col] << "  ";
+                count++;
+            }
+            d = (d + 1) % 4;
+        }
+        steps++;//увеличиваем длину следующего витка спирали
+    }
+    std::cout << "\n";
 }
