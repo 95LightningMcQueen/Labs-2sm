@@ -21,7 +21,7 @@ int main()
         SpiralTraversal(matrix, n);
         DeleteMatrix(matrix, n);
     }
-    catch (const std::exception& error)
+    catch (const std::exception&)
     {
         std::cout << "Invalid matrix size.\n";
     }
