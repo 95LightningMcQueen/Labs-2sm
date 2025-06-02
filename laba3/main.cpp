@@ -33,9 +33,9 @@ int main()
         OutputArray(array, arraySize);
         DeleteArray(array, arraySize);
     }
-    catch (const std::exception& e)
+    catch (const std::exception& error)
     {
-        std::cout << e.what();
+        std::cout << error.what();
     }
     return 0;
 }
