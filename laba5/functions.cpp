@@ -156,9 +156,9 @@ void SpiralTraversal(int32_t** matrix, int32_t n)
     int32_t steps = 1;
     while (count < numberOfElements)
     {
-        for (int rep = 0; rep < 2 && count < numberOfElements; ++rep)
+        for (int32_t rep = 0; rep < 2 && count < numberOfElements; ++rep)
         {
-            for (int i = 0; i < steps && count < numberOfElements; ++i)
+            for (int32_t i = 0; i < steps && count < numberOfElements; ++i)
             {
                 row += directions[d][0];
                 col += directions[d][1];
